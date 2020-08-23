@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies2.fetchdata.pojos;
 
 import java.io.Serializable;
 import java.util.List;

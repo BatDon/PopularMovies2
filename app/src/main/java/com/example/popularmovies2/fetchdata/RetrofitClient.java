@@ -1,6 +1,4 @@
-package com.example.popularmovies;
-
-import java.util.logging.Level;
+package com.example.popularmovies2.fetchdata;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

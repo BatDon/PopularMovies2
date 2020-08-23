@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">PopularMovies</string>
+    <string name="app_name">PopularMovies2</string>
     <string name="image_preview">Image is shown here</string>
     <string name="pathToFile">/data/user/0/com.example.popularmovies/files/popularMoviesList.txt</string>
+    <string name="pathToRelatedMoviesFile">/data/user/0/com.example.popularmovies/files/relatedMoviesList.txt</string>
     <string name="detail_error_message">Error Getting Movie Position</string>
     <string name="popularity">Popularity</string>
     <string name="movie_image">Movie Image</string>
@@ -16,5 +17,30 @@
     <string name="format_double">%.2f/10</string>
     <string name="popular_sorting">Sorting by most popular movie</string>
     <string name="parsing_problem">Unable to parse data</string>
-    />
+
+    <!--    activity_user_movie_details-->
+    <string name="hint_movie_id">1</string>
+    <string name="hint_movie_title">Movie Title</string>
+    <string name="my_favorite_movies">My Favorite Movies</string>
+
+    <!--    Movie provider-->
+    <string name="content_authority">"com.example.popularmovies.moviedata"</string>
+    <string name="favorite_button">Add To Favorite Movies</string>
+    <string name="added_to_favorites">" added to favorites"</string>
+    <string name="related">RELATED</string>
+    <string name="removed_from_favorites">removed from favorites</string>
+
+<!--    shared preferences-->
+    <string name="related_search_key" translatable="false">Related Search Key</string>
+    <string name="shared_preferences" translatable="false">Shared Preferences</string>
+    <string name="no_id_set">no id set</string>
+    <string name="trailer_hint">1</string>
+    <string name="trailer_title">Trailer</string>
+    <string name="user_message_create_movie_list">Create your list of favorite movies</string>
+    <string name="author">Author</string>
+    <string name="content">content ...</string>
+    <string name="trailers">Trailers:</string>
+    <string name="reviews">"Reviews: "</string>
+
+
 </resources>
