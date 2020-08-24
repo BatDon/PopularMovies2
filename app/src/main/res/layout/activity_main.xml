@@ -14,7 +14,7 @@
         android:visibility="invisible" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/gridRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
@@ -24,19 +24,19 @@
         tools:listitem="@layout/movie_image_item">
     </androidx.recyclerview.widget.RecyclerView>
 
-    <GridView
-        android:id="@+id/movie_grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:columnWidth="150dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:stretchMode="columnWidth"
-        tools:text="@string/image_preview"
-        tools:context=".MainActivity">
-    </GridView>
+<!--    <GridView-->
+<!--        android:id="@+id/movie_grid"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="invisible"-->
+<!--        android:columnWidth="150dp"-->
+<!--        android:numColumns="auto_fit"-->
+<!--        android:verticalSpacing="0dp"-->
+<!--        android:horizontalSpacing="0dp"-->
+<!--        android:stretchMode="columnWidth"-->
+<!--        tools:text="@string/image_preview"-->
+<!--        tools:context=".MainActivity">-->
+<!--    </GridView>-->
 
 </FrameLayout>
 

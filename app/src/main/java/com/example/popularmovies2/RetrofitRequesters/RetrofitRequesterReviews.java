@@ -75,6 +75,9 @@ public class RetrofitRequesterReviews extends AppCompatActivity {
             resultList = null;
         } else {
             resultList = relatedMovies.getResults();
+//            ReviewPojo reviewPojo=resultList.get(0);
+//            String content=reviewPojo.getContent();
+//            Log.i(TAG,"content= "+content);
         }
         return resultList;
     }

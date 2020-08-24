@@ -124,7 +124,7 @@
             android:contentDescription="@string/favorite_button"
             android:onClick="favoriteClick"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movieTitle"
+            app:layout_constraintTop_toBottomOf="@+id/movieTitle"
             app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <Button
@@ -135,7 +135,7 @@
             android:layout_marginRight="32dp"
             android:onClick="relatedMovies"
             android:text="@string/related"
-            app:layout_constraintBottom_toBottomOf="@+id/id"
+            app:layout_constraintBottom_toTopOf="@+id/plot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rating" />
 

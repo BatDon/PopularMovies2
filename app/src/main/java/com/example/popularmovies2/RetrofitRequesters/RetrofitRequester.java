@@ -29,34 +29,34 @@ public class RetrofitRequester extends AppCompatActivity {
     private OnRetrofitListener onRetrofitListener;
 
 
-    public void requestMovies(String requestChoice, OnRetrofitListener onRetrofitListener, String id) {
+    public void requestMovies(OnRetrofitListener onRetrofitListener) {
 
         this.onRetrofitListener = onRetrofitListener;
 
 
         MovieApi movieApi = RetrofitClient.getRetrofitInstance().create(MovieApi.class);
-        Call<MoviePojo> call;
-        Call<TrailerMoviesPojo> relatedMoviesCall;
+        Call<MoviePojo> call=movieApi.getAllMovies(UNIQUE_API_KEY);
+       // Call<TrailerMoviesPojo> relatedMoviesCall;
 
-        switch (requestChoice) {
-            case REQUEST_MOVIE_LIST:
-                call = movieApi.getAllMovies(UNIQUE_API_KEY);
-                generalMoviesOrPopularMovies(call);
-                break;
-            case REQUEST_SORTED_POPULAR_MOVIES:
-                call = movieApi.getSortedPopularMovies(UNIQUE_API_KEY);
-                generalMoviesOrPopularMovies(call);
-                break;
+//        switch (requestChoice) {
+//            case REQUEST_MOVIE_LIST:
+//                call = movieApi.getAllMovies(UNIQUE_API_KEY);
+//                generalMoviesOrPopularMovies(call);
+//                break;
+//            case REQUEST_SORTED_POPULAR_MOVIES:
+//                call = movieApi.getSortedPopularMovies(UNIQUE_API_KEY);
+//                generalMoviesOrPopularMovies(call);
+//                break;
 //            case REQUEST_RELATED_MOVIES:
 //                relatedMoviesCall = movieApi.getRelatedMovies(id, UNIQUE_API_KEY);
 //                relatedMovies(relatedMoviesCall);
 //                break;
-            default:
-                call = movieApi.getAllMovies(UNIQUE_API_KEY);
-        }
-    }
+//            default:
+//                call = movieApi.getAllMovies(UNIQUE_API_KEY);
+//        }
+//    }
 
-    private void generalMoviesOrPopularMovies(Call call){
+//    private void generalMoviesOrPopularMovies(Call call){
 
         call.enqueue(new Callback<MoviePojo>() {
             @Override
@@ -77,7 +77,7 @@ public class RetrofitRequester extends AppCompatActivity {
     public List<Result> generateDataList(MoviePojo moviePojoList) {
         List<Result> resultList;
         if (moviePojoList == null) {
-            Toast.makeText(this, R.string.parsing_problem, Toast.LENGTH_SHORT).show();
+ //           Toast.makeText(this, R.string.parsing_problem, Toast.LENGTH_SHORT).show();
             resultList=null;
         } else {
             resultList = moviePojoList.getResults();

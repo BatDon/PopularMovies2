@@ -17,8 +17,11 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.popularmovies2.RetrofitRequesters.RetrofitRequesterPopular;
 import com.example.popularmovies2.adapters.CompleteAdapter;
 //import com.example.popularmovies2.adapters.RelatedMoviesAdapter;
+import com.example.popularmovies2.adapters.GridAdapter;
+import com.example.popularmovies2.adapters.RelatedMoviesAdapter;
 import com.example.popularmovies2.fetchdata.pojos.Result;
 import com.example.popularmovies2.RetrofitRequesters.RetrofitRequester;
 import com.example.popularmovies2.userfavorites.UserFavorites;
@@ -36,18 +39,20 @@ import static com.example.popularmovies2.Constants.RELATED_KEY;
 import static com.example.popularmovies2.Constants.REQUEST_MOVIE_LIST;
 import static com.example.popularmovies2.Constants.REQUEST_SORTED_POPULAR_MOVIES;
 
-//public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieListener, RetrofitRequester.OnRetrofitListener{
-public class MainActivity extends AppCompatActivity implements CompleteAdapter.OnMovieListener, RetrofitRequester.OnRetrofitListener{
+public class MainActivity extends AppCompatActivity implements GridAdapter.OnMovieListener,
+        RetrofitRequester.OnRetrofitListener, RetrofitRequesterPopular.OnPopularRetrofitListener{
+//public class MainActivity extends AppCompatActivity implements CompleteAdapter.OnMovieListener, RetrofitRequester.OnRetrofitListener{
 
     public static final String TAG= MainActivity.class.getSimpleName();
 
 
     ProgressBar progressBar;
-    GridView gridView;
+//    GridView gridView;
     public List<Result> resultList;
-    //RelatedMoviesAdapter movieAdapter;
+    RelatedMoviesAdapter relatedMoviesAdapter;
+    GridAdapter gridAdapter;
     CompleteAdapter completeAdapter;
-    RecyclerView recyclerView;
+    RecyclerView gridRecyclerView;
 
 
 
@@ -61,33 +66,40 @@ public class MainActivity extends AppCompatActivity implements CompleteAdapter.O
 
         setUpView();
             Log.i(TAG,"regular movies requested");
-            new RetrofitRequester().requestMovies(REQUEST_MOVIE_LIST,this, null);
+            new RetrofitRequester().requestMovies(this);
 
     }
 
     public void setUpView(){
         progressBar=findViewById(R.id.loading_progress_bar);
-        gridView=findViewById(R.id.movie_grid);
-        recyclerView = findViewById(R.id.recyclerView);
+        //gridView=findViewById(R.id.movie_grid);
+        gridRecyclerView = findViewById(R.id.gridRecyclerView);
         progressBar.setVisibility(View.VISIBLE);
     };
 
-
-
-
     public void onRetrofitFinished(List<Result> movieList){
         resultList=movieList;
-        for(Result result:resultList){
-            Log.i(TAG," "+result.getOriginalTitle());
+//        for(Result result:resultList){
+//            Log.i(TAG," "+result.getOriginalTitle());
+//        }
+        if(resultList.size()>0) {
+            setUpGridAdapter();
         }
-        setUpAdapter();
 
+    }
+
+    @Override
+    public void onPopularRetrofitFinished(List<Result> movieList){
+        resultList=movieList;
+        if(resultList.size()>0) {
+            setUpGridAdapter();
+        }
     }
 
 
 
-    public void setUpAdapter(){
-        recyclerView.setHasFixedSize(true);
+    public void setUpGridAdapter(){
+        gridRecyclerView.setHasFixedSize(true);
         int numberOfColumns = 2;
 
         GridLayoutManager gridLayoutManager=new GridLayoutManager(this, numberOfColumns, RecyclerView.VERTICAL,false);
@@ -97,17 +109,23 @@ public class MainActivity extends AppCompatActivity implements CompleteAdapter.O
                 return 1;
             }
         });
-        recyclerView.setLayoutManager(gridLayoutManager);
+        gridRecyclerView.setLayoutManager(gridLayoutManager);
         Result[] resultArray=new Result[resultList.size()];
         resultList.toArray(resultArray);
+        if(resultArray.length==0){
+            Log.i(TAG,"no results found");
+        }
+        else{
+            Log.i(TAG,"resultArray length= "+resultArray.length+"");
+        }
         Log.i(TAG,Integer.toString(resultArray.length));
-//        movieAdapter = new MovieAdapter(this, resultArray, this);
-        completeAdapter = new CompleteAdapter(this, this, resultArray, GRID_RECYCLER_VIEW);
-//        recyclerView.setAdapter(movieAdapter);
-        recyclerView.setAdapter(completeAdapter);
+        gridAdapter = new GridAdapter(this, resultArray, this);
+        //completeAdapter = new CompleteAdapter(this, this, resultArray, GRID_RECYCLER_VIEW);
+        gridRecyclerView.setAdapter(gridAdapter);
+//        gridRecyclerView.setAdapter(completeAdapter);
 
         progressBar.setVisibility(View.INVISIBLE);
-        recyclerView.setVisibility(View.VISIBLE);
+        gridRecyclerView.setVisibility(View.VISIBLE);
 
         ArrayList<Result> movieArrayList = new ArrayList<Result>(Arrays.asList(resultArray));
 
@@ -140,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements CompleteAdapter.O
         switch (item.getItemId()) {
             case R.id.action_most_popular: {
                 Toast.makeText(this, R.string.popular_sorting, Toast.LENGTH_SHORT).show();
-                new RetrofitRequester().requestMovies(REQUEST_SORTED_POPULAR_MOVIES,this, null);
+                new RetrofitRequester().requestMovies(this);
                 break;
             }
             case R.id.action_favorite_movies:{
@@ -153,10 +171,12 @@ public class MainActivity extends AppCompatActivity implements CompleteAdapter.O
 
 
     @Override
-    public void onMovieClick(int position){
+    public void onMoviePosterClick(int position){
         Intent detailIntent=new Intent(this, MovieDetails.class);
         detailIntent.putExtra(MOVIE_POSITION, position);
         startActivity(detailIntent);
     }
+
+
 
 }

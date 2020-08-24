@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class Constants {
 
-    public static final String UNIQUE_API_KEY="YOUR_API_KEY_GOES_HERE";
+    public static final String UNIQUE_API_KEY="YOUR_API_KEY_HERE";
 
     //Movie Details Activity
     public static final String MOVIE_POSITION="MOVIE_POSITION";

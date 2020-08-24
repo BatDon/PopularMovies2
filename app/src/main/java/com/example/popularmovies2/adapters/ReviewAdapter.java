@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.popularmovies2.R;
@@ -18,6 +19,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MovieViewH
 
     ReviewPojo[] moviesList;
     private LayoutInflater mInflater;
+    int reviewsSize;
 //    private OnReviewMovieListener onReviewMovieListener;
 
     private final String TAG = ReviewAdapter.class.getSimpleName();
@@ -34,6 +36,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MovieViewH
         this.context=context;
         this.mInflater = LayoutInflater.from(context);
         this.moviesList=moviesList;
+        reviewsSize=moviesList.length;
 //        this.onReviewMovieListener=onReviewMovieListener;
     }
 
