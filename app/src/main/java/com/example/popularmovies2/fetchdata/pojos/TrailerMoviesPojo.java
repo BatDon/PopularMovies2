@@ -6,6 +6,9 @@ import com.example.popularmovies2.fetchdata.pojos.TrailerMoviePojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
+//http://www.jsonschema2pojo.org/
+
 public class TrailerMoviesPojo {
 
     @SerializedName("id")

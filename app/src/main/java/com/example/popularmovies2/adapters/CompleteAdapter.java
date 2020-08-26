@@ -25,11 +25,7 @@ import static com.example.popularmovies2.Constants.LIST_RECYCLER_VIEW;
 
 public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.UserMovieViewHolder> {
 
-//    final private UserMovieOnClickHandler mClickHandler;
 
-//    public interface UserMovieOnClickHandler {
-//        void onClick(String id);
-//    }
     private CompleteAdapter.OnMovieListener onMovieListener;
 
     public interface OnMovieListener{
@@ -46,18 +42,8 @@ public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.UserMo
 
     int layoutId;
 
-    //   private final Context context;
-//    private ActivityUserMovieDetailsBinding activityUserMovieDetailsBinding;
-
-//    final private UserMovieOnClickHandler userMovieOnClickHandler;
 
     private Cursor cursor;
-
-//    public interface UserMovieOnClickHandler {
-//        void onClick(int id);
-//    }
-
-
 
     class UserMovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         OnMovieListener onMovieListener;

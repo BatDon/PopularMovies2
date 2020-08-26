@@ -70,14 +70,6 @@ public class MainActivityViewModel extends AndroidViewModel implements
     public void onRetrofitFinished(List<Result> movieList){
         resultList=movieList;
         transformToLiveData(movieList);
-        //liveDataResultList=movieList;
-//        for(Result result:resultList){
-//            Log.i(TAG," "+result.getOriginalTitle());
-//        }
-//        if(resultList.size()>0) {
-//            setUpGridAdapter();
-//        }
-
     }
 
     @Override
@@ -90,21 +82,10 @@ public class MainActivityViewModel extends AndroidViewModel implements
     }
 
     private void transformToLiveData(List<Result> resultList){
-//        MutableLiveData<List<Result>> mutableMovieLiveData = new MutableLiveData<List<Result>>();
-//        mutableMovieLiveData.postValue(resultList);
-////        LiveData<List<Result>> movieList = Transformations.map(resultList, result -> {
-////            return result;
-////        });
-//        Log.i("MainViewModel","transformToLiveData triggered");
         this.liveDataResultList.postValue(resultList);
-        //Log.i("MainViewModel","mutableMovieLiveData size= "+mutableMovieLiveData.getValue().size());
-        //setAllMovies(mutableMovieLiveData);
     }
 
-//    public void setAllMovies(MutableLiveData<List<Result>> resultList){
-//        Log.i("MainViewModel","setAllMovies called");
-//        this.liveDataResultList=resultList;
-//    }
+
 
 
 

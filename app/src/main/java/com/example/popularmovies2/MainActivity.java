@@ -113,25 +113,6 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
         mainActivityViewModel.getAllMovies().observe(this,observer);
     }
 
-//    public void onRetrofitFinished(List<Result> movieList){
-//        resultList=movieList;
-////        for(Result result:resultList){
-////            Log.i(TAG," "+result.getOriginalTitle());
-////        }
-//        if(resultList.size()>0) {
-//            setUpGridAdapter();
-//        }
-//
-//    }
-//
-//    @Override
-//    public void onPopularRetrofitFinished(List<Result> movieList){
-//        resultList=movieList;
-//        if(resultList.size()>0) {
-//            setUpGridAdapter();
-//        }
-//    }
-
 
 
     public void setUpGridAdapter(){
@@ -172,18 +153,6 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
         Log.i(TAG,"end of setUpAdapter");
     }
 
-//    private void writeToFile(ArrayList<Result> movieList, Context context) {
-//
-//        try {
-//            FileOutputStream fileOut = new FileOutputStream(new File(getString(R.string.pathToFile)));
-//            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-//            objectOut.writeObject(movieList);
-//            objectOut.close();
-//            fileOut.close();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

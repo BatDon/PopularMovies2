@@ -66,68 +66,6 @@ public class RetrofitRequesterTrailer extends AppCompatActivity {
     }
 }
 
-//    private void generalMoviesOrPopularMovies(Call call){
-//
-//        call.enqueue(new Callback<MoviePojo>() {
-//            @Override
-//            public void onResponse(Call<MoviePojo> call, Response<MoviePojo> response) {
-//                List<Result> movieList=generateDataList(response.body());
-//                if (onRetrofitListener != null){
-//                    onRetrofitListener.onRetrofitFinished((movieList));
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<MoviePojo> call, Throwable t) {
-//                Toast.makeText(RetrofitRequester.this, R.string.problem_retrieving_data, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//
-//
-//    }
-//
-//    public List<Result> generateDataList(MoviePojo moviePojoList) {
-//        List<Result> resultList;
-//        if (moviePojoList == null) {
-//            Toast.makeText(this, R.string.parsing_problem, Toast.LENGTH_SHORT).show();
-//            resultList=null;
-//        } else {
-//            resultList = moviePojoList.getResults();
-//        }
-//        return resultList;
-//    }
-//
-//
-//
-//    private void relatedMovies(Call relatedMoviesCall){
-//        relatedMoviesCall.enqueue(new Callback<RelatedMovies>() {
-//            @Override
-//            public void onResponse(Call<RelatedMovies> call, Response<RelatedMovies> response) {
-//                List<Result> movieList=generateRelatedMoviesList(response.body());
-//                if (onRetrofitListener != null){
-//                    onRetrofitListener.onRetrofitFinished((movieList));
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RelatedMovies> call, Throwable t) {
-//                Toast.makeText(RetrofitRequester.this, R.string.problem_retrieving_data, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    public List<Result> generateRelatedMoviesList(RelatedMovies relatedMovies) {
-//        List<Result> resultList;
-//        if (relatedMovies == null) {
-//            Toast.makeText(this, R.string.parsing_problem, Toast.LENGTH_SHORT).show();
-//            resultList=null;
-//        } else {
-//            resultList = relatedMovies.getResults();
-//        }
-//        return resultList;
-//    }
+
 
 

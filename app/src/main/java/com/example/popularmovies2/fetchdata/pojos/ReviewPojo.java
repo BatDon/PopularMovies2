@@ -3,6 +3,8 @@ package com.example.popularmovies2.fetchdata.pojos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+//http://www.jsonschema2pojo.org/
+
 public class ReviewPojo {
 
     @SerializedName("author")

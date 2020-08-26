@@ -36,27 +36,6 @@ public class RetrofitRequester extends AppCompatActivity {
 
         MovieApi movieApi = RetrofitClient.getRetrofitInstance().create(MovieApi.class);
         Call<MoviePojo> call=movieApi.getAllMovies(UNIQUE_API_KEY);
-       // Call<TrailerMoviesPojo> relatedMoviesCall;
-
-//        switch (requestChoice) {
-//            case REQUEST_MOVIE_LIST:
-//                call = movieApi.getAllMovies(UNIQUE_API_KEY);
-//                generalMoviesOrPopularMovies(call);
-//                break;
-//            case REQUEST_SORTED_POPULAR_MOVIES:
-//                call = movieApi.getSortedPopularMovies(UNIQUE_API_KEY);
-//                generalMoviesOrPopularMovies(call);
-//                break;
-//            case REQUEST_RELATED_MOVIES:
-//                relatedMoviesCall = movieApi.getRelatedMovies(id, UNIQUE_API_KEY);
-//                relatedMovies(relatedMoviesCall);
-//                break;
-//            default:
-//                call = movieApi.getAllMovies(UNIQUE_API_KEY);
-//        }
-//    }
-
-//    private void generalMoviesOrPopularMovies(Call call){
 
         call.enqueue(new Callback<MoviePojo>() {
             @Override
@@ -85,34 +64,4 @@ public class RetrofitRequester extends AppCompatActivity {
         return resultList;
     }
 
-
-
-//    private void relatedMovies(Call relatedMoviesCall){
-//        relatedMoviesCall.enqueue(new Callback<RelatedMoviesPojo>() {
-//            @Override
-//            public void onResponse(Call<RelatedMoviesPojo> call, Response<RelatedMoviesPojo> response) {
-//                List<Result> movieList=generateRelatedMoviesList(response.body());
-//                if (onRetrofitListener != null){
-//                    onRetrofitListener.onRetrofitFinished((movieList));
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RelatedMoviesPojo> call, Throwable t) {
-//                Toast.makeText(RetrofitRequester.this, R.string.problem_retrieving_data, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-//    public List<Result> generateRelatedMoviesList(RelatedMoviesPojo relatedMovies) {
-//        List<Result> resultList;
-//        if (relatedMovies == null) {
-//            Toast.makeText(this, R.string.parsing_problem, Toast.LENGTH_SHORT).show();
-//            resultList=null;
-//        } else {
-//            resultList = relatedMovies.getResults();
-//        }
-//        return resultList;
-//    }
 }

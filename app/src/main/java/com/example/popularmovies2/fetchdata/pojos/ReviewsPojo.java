@@ -4,6 +4,8 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+//http://www.jsonschema2pojo.org/
+
 public class ReviewsPojo {
 
     @SerializedName("id")
