@@ -1,10 +1,14 @@
 package com.example.popularmovies2;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Application;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,6 +41,9 @@ import com.example.popularmovies2.fetchdata.pojos.TrailerMoviePojo;
 import com.example.popularmovies2.moviedata.MovieContract.MovieEntry;
 import com.example.popularmovies2.moviedata.MovieProvider;
 import com.example.popularmovies2.relatedmovies.RelatedMoviesList;
+import com.example.popularmovies2.viewmodels.MainActivityViewModel;
+import com.example.popularmovies2.viewmodels.MovieDetailsViewModel;
+import com.example.popularmovies2.viewmodels.MovieDetailsViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -53,13 +60,12 @@ import static com.example.popularmovies2.Constants.IMAGE_SIZE;
 import static com.example.popularmovies2.Constants.MOVIE_POSITION;
 import static com.example.popularmovies2.Constants.RELATED_KEY;
 
-public class MovieDetails extends AppCompatActivity implements RetrofitRequesterTrailer.TrailersOnRetrofitListener,
-        RetrofitRequesterReviews.ReviewsOnRetrofitListener, TrailerAdapter.OnTrailerMovieListener {
+public class MovieDetails extends AppCompatActivity implements TrailerAdapter.OnTrailerMovieListener {
 
     public static final String TAG = MovieDetails.class.getSimpleName();
 
-    List<TrailerMoviePojo> trailerResultList;
-    List<ReviewPojo> reviewResultList;
+    List<TrailerMoviePojo> trailerList;
+    List<ReviewPojo> reviewList;
     Context context = this;
     int position;
     ImageView movieImageIV;
@@ -85,22 +91,34 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
     RecyclerView trailerRecyclerView;
     RecyclerView reviewRecyclerView;
 
+    MovieDetailsViewModel movieDetailsViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        getMoviePosition();
+        //getMoviePosition();
         setUpUI();
-        getMovieDir();
-        getTrailers();
-        getReviews();
+        getMoviePosition();
+
+        setUpViewModel();
+        setUpTrailerOnChanged();
+        setUpReviewOnChanged();
+
+        setValues();
+
+        //send work to viewmodel
+//        getMovieDir();
+//        getTrailers();
+//        getReviews();
 
     }
 
     public void getMoviePosition() {
         Intent intent = getIntent();
         if (intent == null) {
+            Log.i(TAG,"Error getting position");
             closeOnError();
         }
 
@@ -134,39 +152,62 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
 
     }
 
-    private void getMovieDir() {
-        ArrayList<Result> movieList;
-
-        try {
-            FileInputStream fis = new FileInputStream(new File(getString(R.string.pathToFile)));
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            movieList = (ArrayList) ois.readObject();
-
-            ois.close();
-            fis.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            return;
-        } catch (ClassNotFoundException c) {
-            System.out.println(getString(R.string.class_not_found));
-            c.printStackTrace();
-            return;
-        }
-
-        setValues(movieList);
+    private void setUpViewModel(){
+        MovieDetailsViewModelFactory movieDetailsViewModelFactory=new MovieDetailsViewModelFactory(getApplication(), position);
+        movieDetailsViewModel = ViewModelProviders.of(this, movieDetailsViewModelFactory).get(MovieDetailsViewModel.class);
+        context=movieDetailsViewModel.getApplication();
     }
 
-    private void getTrailers() {
-        new RetrofitRequesterTrailer().requestMovies(this, Integer.toString(movieId));
-    }
+    public void setUpTrailerOnChanged(){
+        Observer<List<TrailerMoviePojo>> observer=new Observer<List<TrailerMoviePojo>>() {
+            int i=0;
+            @Override
+            public void onChanged(@Nullable final List<TrailerMoviePojo> trailers) {
+                i=trailers.size();
+                // Update the cached copy of the words in the adapter.
+                Log.i("MainActivity","onChanged triggered");
+                if(i>0){
+                    trailerList=trailers;
+                    setUpTrailerAdapter();
+                }
+            }
+        };
 
-    private void getReviews() {
-        new RetrofitRequesterReviews().requestMovies(this, Integer.toString(movieId));
+        movieDetailsViewModel.getAllTrailers().observe(this,observer);
     }
 
 
-    private void setValues(ArrayList<Result> movieList) {
-        movie = movieList.get(position);
+    public void setUpReviewOnChanged(){
+        Observer<List<ReviewPojo>> observer=new Observer<List<ReviewPojo>>() {
+            int i=0;
+            @Override
+            public void onChanged(@Nullable final List<ReviewPojo> reviews) {
+                i=reviews.size();
+                // Update the cached copy of the words in the adapter.
+                Log.i("MainActivity","onChanged triggered");
+                if(i>0){
+                    reviewList=reviews;
+                    setUpReviewAdapter();
+                }
+//                i++;
+//                //mainViewModel.requestMovies();
+//                resultList=movies;
+//                if(mainViewModel.getAllMovies().getValue()!=null){
+//                    mainViewModel.requestMovies();
+//                }
+            }
+        };
+
+        movieDetailsViewModel.getAllReviews().observe(this,observer);
+    }
+
+
+
+//    private void setValues(ArrayList<Result> movieList) {
+    private void setValues() {
+
+        Result movie=movieDetailsViewModel.getMovieDetails();
+        //movie = movieList.get(position);
 
         movieId = movie.getId();
 
@@ -196,26 +237,7 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
     }
 
     private void insertFavoriteMovie(Context context) {
-        context.getContentResolver().insert(
-                createURI(),
-                createMoveContentValues());
-    }
-
-    public static final Uri createURI() {
-        return MovieEntry.CONTENT_URI.buildUpon()
-                .appendPath(Integer.toString(MovieProvider.CODE_SPECIFIC_MOVIE))
-                .build();
-    }
-
-    private ContentValues createMoveContentValues() {
-        ContentValues favoriteMovie = new ContentValues();
-
-        favoriteMovie.put(MovieEntry.COLUMN_ID, movieId);
-        favoriteMovie.put(MovieEntry.COLUMN_TITLE, movieTitleString);
-        favoriteMovie.put(MovieEntry.COLUMN_POSTER, movieImageString);
-        favoriteMovie.put(MovieEntry.COLUMN_PLOT, moviePlotString);
-        favoriteMovie.put(MovieEntry.COLUMN_USER_RATING, movieVoteAverage);
-        return favoriteMovie;
+        movieDetailsViewModel.insertFavoriteMovieVM();
     }
 
     public void relatedMovies(View view) {
@@ -223,23 +245,6 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
         intent.putExtra(RELATED_KEY, Integer.toString(movieId));
         Log.i(TAG, "related movie id" + movieId);
         startActivity(intent);
-
-    }
-
-    @Override
-    public void trailersOnRetrofitFinished(List<TrailerMoviePojo> movieList) {
-
-        //keys contain trailers
-        trailerResultList = movieList;
-//        String movieNumber=movieList.get(0).getIso6391();
-//        Toast.makeText(context, movieNumber, Toast.LENGTH_SHORT).show();
-
-        if (trailerResultList.size() > 0) {
-            Log.i(TAG, "trailer size= " + trailerResultList.size());
-            setUpTrailerAdapter();
-        } else {
-            Log.i(TAG, "trailer size=0");
-        }
     }
 
     public void setUpTrailerAdapter() {
@@ -248,33 +253,46 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         trailerRecyclerView.setLayoutManager(linearLayoutManager);
 
-        TrailerMoviePojo[] resultArray = new TrailerMoviePojo[trailerResultList.size()];
-        trailerResultList.toArray(resultArray);
+        TrailerMoviePojo[] resultArray = new TrailerMoviePojo[trailerList.size()];
+        trailerList.toArray(resultArray);
         Log.i(TAG, Integer.toString(resultArray.length));
 
+//        Dynamically change Trailer Frame Layout Height
+        int reviewLength=0;
+        FrameLayout trailerFrameLayout=this.findViewById(R.id.trailer_frame_layout);
+        reviewLength = resultArray.length;
+        int frameLayoutSize = (reviewLength * 50)+50;
+        if(frameLayoutSize>300){
+            frameLayoutSize=300;
+        }
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) trailerFrameLayout.getLayoutParams();
+        params.height = frameLayoutSize;
+        trailerFrameLayout.setLayoutParams(params);
 
         TrailerAdapter trailerAdapter = new TrailerAdapter(this, resultArray, this);
 
         trailerRecyclerView.setAdapter(trailerAdapter);
 
         showTrailerRecyclerView();
+
+//        if(resultArray.length>0 && !key.equals("key")) {
+//            ReviewAdapter reviewAdapter = new ReviewAdapter(this, resultArray);
+//            reviewRecyclerView.setAdapter(reviewAdapter);
+//            Log.i(TAG, "setUpReviewAdapter called");
+//            showReviewRecyclerView();
+//        }
+//        else{
+//            Log.i(TAG,"reviewArray is equal to zero");
+//            FrameLayout reviewFrameLayout=this.findViewById(R.id.review_frame_layout);
+//            reviewFrameLayout.setVisibility(View.GONE);
+//            this.findViewById(R.id.reviews_title).setVisibility(View.GONE);
+//        }
+
+
 //        showTrailersLoading();
 
 
         Log.i(TAG, "end of setUpAdapter");
-    }
-
-    @Override
-    public void reviewsOnRetrofitFinished(List<ReviewPojo> movieList) {
-
-        reviewResultList = movieList;
-        if (reviewResultList.size() > 0) {
-            Log.i(TAG, "reviews size=" + reviewResultList.size());
-            setUpReviewAdapter();
-        } else {
-            Log.i(TAG, "reviews size=0");
-        }
-
     }
 
     public void setUpReviewAdapter() {
@@ -284,12 +302,12 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         reviewRecyclerView.setLayoutManager(linearLayoutManager);
 
-        ReviewPojo[] resultArray = new ReviewPojo[reviewResultList.size()];
-        reviewResultList.toArray(resultArray);
+        ReviewPojo[] resultArray = new ReviewPojo[reviewList.size()];
+        reviewList.toArray(resultArray);
         Log.i(TAG, Integer.toString(resultArray.length));
 
-        int reviewLength = resultArray.length;
-        int frameLayoutSize = reviewLength * 50;
+//        int reviewLength = resultArray.length;
+//        int frameLayoutSize = reviewLength * 50;
 
 //        FrameLayout reviewFrameLayout=this.findViewById(R.id.review_frame_layout);
 //
@@ -297,17 +315,34 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
 //        params.height = frameLayoutSize;
 //        reviewFrameLayout.setLayoutParams(params);
 
-//        String author=resultArray[0].getAuthor();
-//        Log.i(TAG,"author= "+author);
+        String author = resultArray[0].getAuthor();
+        Log.i(TAG, "author= " + author);
+
+//        ReviewAdapter reviewAdapter = new ReviewAdapter(this, resultArray);
+//        reviewRecyclerView.setAdapter(reviewAdapter);
+//        Log.i(TAG, "setUpReviewAdapter called");
+//        showReviewRecyclerView();
+//        Log.i(TAG,"reviews size="+resultArray.length);
+ //   }
 
 
-        ReviewAdapter reviewAdapter = new ReviewAdapter(this, resultArray);
-
-        reviewRecyclerView.setAdapter(reviewAdapter);
-
-        Log.i(TAG, "setUpReviewAdapter called");
-
-        showReviewRecyclerView();
+//        if(resultArray.length>1 && !author.equals("author")) {
+        if(resultArray.length>1 || !author.equals("author")) {
+            ReviewAdapter reviewAdapter = new ReviewAdapter(this, resultArray);
+            reviewRecyclerView.setAdapter(reviewAdapter);
+            FrameLayout reviewFrameLayout=this.findViewById(R.id.review_frame_layout);
+            reviewFrameLayout.setVisibility(View.VISIBLE);
+            this.findViewById(R.id.reviews_title).setVisibility(View.VISIBLE);
+            Log.i(TAG, "setUpReviewAdapter called");
+            Log.i(TAG,"reviews size="+resultArray.length);
+            showReviewRecyclerView();
+        }
+        else{
+            Log.i(TAG,"reviewArray is equal to zero");
+            FrameLayout reviewFrameLayout=this.findViewById(R.id.review_frame_layout);
+            reviewFrameLayout.setVisibility(View.GONE);
+            this.findViewById(R.id.reviews_title).setVisibility(View.GONE);
+        }
     }
 
     public void showTrailersLoading() {
@@ -332,7 +367,7 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
 
     @Override
     public void onMovieClick(int position) {
-        TrailerMoviePojo trailerMoviePojo = trailerResultList.get(position);
+        TrailerMoviePojo trailerMoviePojo = trailerList.get(position);
         String trailerKey = trailerMoviePojo.getKey();
         Log.i(TAG, "trailerkey= " + trailerKey);
         startSearchIntent(trailerKey);
@@ -341,8 +376,6 @@ public class MovieDetails extends AppCompatActivity implements RetrofitRequester
 
 //https://m.youtube.com/watch?v=key
 
-
-    //https://www.hellojava.com/a/71879.html
 
     //https://www.hellojava.com/a/71879.html
 

@@ -1,7 +1,10 @@
 package com.example.popularmovies2;
 
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +28,7 @@ import com.example.popularmovies2.adapters.RelatedMoviesAdapter;
 import com.example.popularmovies2.fetchdata.pojos.Result;
 import com.example.popularmovies2.RetrofitRequesters.RetrofitRequester;
 import com.example.popularmovies2.userfavorites.UserFavorites;
+import com.example.popularmovies2.viewmodels.MainActivityViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,8 +43,8 @@ import static com.example.popularmovies2.Constants.RELATED_KEY;
 import static com.example.popularmovies2.Constants.REQUEST_MOVIE_LIST;
 import static com.example.popularmovies2.Constants.REQUEST_SORTED_POPULAR_MOVIES;
 
-public class MainActivity extends AppCompatActivity implements GridAdapter.OnMovieListener,
-        RetrofitRequester.OnRetrofitListener, RetrofitRequesterPopular.OnPopularRetrofitListener{
+public class MainActivity extends AppCompatActivity implements GridAdapter.OnMovieListener{
+       // RetrofitRequester.OnRetrofitListener, RetrofitRequesterPopular.OnPopularRetrofitListener{
 //public class MainActivity extends AppCompatActivity implements CompleteAdapter.OnMovieListener, RetrofitRequester.OnRetrofitListener{
 
     public static final String TAG= MainActivity.class.getSimpleName();
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
     CompleteAdapter completeAdapter;
     RecyclerView gridRecyclerView;
 
+    MainActivityViewModel mainActivityViewModel;
+
 
 
     @Override
@@ -65,8 +71,12 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
 
 
         setUpView();
+//        new RetrofitRequester().requestMovies(this);
+
+        mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        setUpViewModelOnChanged();
+        mainActivityViewModel.requestGeneralMovies();
             Log.i(TAG,"regular movies requested");
-            new RetrofitRequester().requestMovies(this);
 
     }
 
@@ -75,26 +85,52 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
         //gridView=findViewById(R.id.movie_grid);
         gridRecyclerView = findViewById(R.id.gridRecyclerView);
         progressBar.setVisibility(View.VISIBLE);
+
+        //setUpViewModelOnChanged();
     };
 
-    public void onRetrofitFinished(List<Result> movieList){
-        resultList=movieList;
-//        for(Result result:resultList){
-//            Log.i(TAG," "+result.getOriginalTitle());
+    public void setUpViewModelOnChanged(){
+        Observer<List<Result>> observer=new Observer<List<Result>>() {
+            int i=0;
+            @Override
+            public void onChanged(@Nullable final List<Result> movies) {
+                i=movies.size();
+                // Update the cached copy of the words in the adapter.
+                Log.i("MainActivity","onChanged triggered");
+                if(i>0){
+                    resultList=movies;
+                    setUpGridAdapter();
+                }
+//                i++;
+//                //mainViewModel.requestMovies();
+//                resultList=movies;
+//                if(mainViewModel.getAllMovies().getValue()!=null){
+//                    mainViewModel.requestMovies();
+//                }
+            }
+        };
+
+        mainActivityViewModel.getAllMovies().observe(this,observer);
+    }
+
+//    public void onRetrofitFinished(List<Result> movieList){
+//        resultList=movieList;
+////        for(Result result:resultList){
+////            Log.i(TAG," "+result.getOriginalTitle());
+////        }
+//        if(resultList.size()>0) {
+//            setUpGridAdapter();
 //        }
-        if(resultList.size()>0) {
-            setUpGridAdapter();
-        }
-
-    }
-
-    @Override
-    public void onPopularRetrofitFinished(List<Result> movieList){
-        resultList=movieList;
-        if(resultList.size()>0) {
-            setUpGridAdapter();
-        }
-    }
+//
+//    }
+//
+//    @Override
+//    public void onPopularRetrofitFinished(List<Result> movieList){
+//        resultList=movieList;
+//        if(resultList.size()>0) {
+//            setUpGridAdapter();
+//        }
+//    }
 
 
 
@@ -129,23 +165,23 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
 
         ArrayList<Result> movieArrayList = new ArrayList<Result>(Arrays.asList(resultArray));
 
-        writeToFile(movieArrayList,this);
+        mainActivityViewModel.writeToFile(movieArrayList,this);
 
         Log.i(TAG,"end of setUpAdapter");
     }
 
-    private void writeToFile(ArrayList<Result> movieList, Context context) {
-
-        try {
-            FileOutputStream fileOut = new FileOutputStream(new File(getString(R.string.pathToFile)));
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(movieList);
-            objectOut.close();
-            fileOut.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//    private void writeToFile(ArrayList<Result> movieList, Context context) {
+//
+//        try {
+//            FileOutputStream fileOut = new FileOutputStream(new File(getString(R.string.pathToFile)));
+//            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+//            objectOut.writeObject(movieList);
+//            objectOut.close();
+//            fileOut.close();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
         switch (item.getItemId()) {
             case R.id.action_most_popular: {
                 Toast.makeText(this, R.string.popular_sorting, Toast.LENGTH_SHORT).show();
-                new RetrofitRequester().requestMovies(this);
+                mainActivityViewModel.requestPopularMovies();
+                //new RetrofitRequester().requestMovies(this);
                 break;
             }
             case R.id.action_favorite_movies:{

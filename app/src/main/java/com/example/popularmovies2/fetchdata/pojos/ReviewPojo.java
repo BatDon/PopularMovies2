@@ -18,6 +18,10 @@ public class ReviewPojo {
     @Expose
     private String url;
 
+    public ReviewPojo(String author) {
+        this.author=author;
+    }
+
     public String getAuthor() {
         return author;
     }

@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollview"
+    tools:context=".MovieDetails">
+
+    <include android:id="@+id/movie_details_merge"
+        layout="@layout/movie_details_merge"/>
+
+
+
+
+    <!--    <include-->
+    <!--        android:id="@+id/trailers_movie_reviews_list_merge"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        layout="@layout/trailers_movie_reviews_list_merge"/>-->
+
+
+
+
+</ScrollView>
+
+<!---->
 <!--<layout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
 <!--    xmlns:tools="http://schemas.android.com/tools">-->
@@ -9,18 +37,18 @@
 <!--            type="com.example.popularmovies2.userfavorites.UserMovie" />-->
 <!--    </data>-->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintBottom_toTopOf="@+id/movie_id"
-    app:layout_constraintTop_toTopOf="@+id/movie_id">
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/constraintLayout"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    app:layout_constraintBottom_toTopOf="@+id/movie_id"-->
+<!--    app:layout_constraintTop_toTopOf="@+id/movie_id">-->
 
-    <include android:id="@+id/linear_detail_movie_title_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/linear_detail_movie_title_id"/>
+<!--    <include android:id="@+id/linear_detail_movie_title_id"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        layout="@layout/linear_detail_movie_title_id"/>-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

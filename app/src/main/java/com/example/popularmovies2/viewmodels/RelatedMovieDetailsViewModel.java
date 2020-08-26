@@ -3,29 +3,22 @@ package com.example.popularmovies2.viewmodels;
 import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.popularmovies2.R;
-import com.example.popularmovies2.RetrofitRequesters.RetrofitRequester;
-import com.example.popularmovies2.RetrofitRequesters.RetrofitRequesterPopular;
 import com.example.popularmovies2.RetrofitRequesters.RetrofitRequesterReviews;
 import com.example.popularmovies2.RetrofitRequesters.RetrofitRequesterTrailer;
-import com.example.popularmovies2.adapters.GridAdapter;
-import com.example.popularmovies2.adapters.TrailerAdapter;
 import com.example.popularmovies2.fetchdata.pojos.Result;
 import com.example.popularmovies2.fetchdata.pojos.ReviewPojo;
 import com.example.popularmovies2.fetchdata.pojos.TrailerMoviePojo;
 import com.example.popularmovies2.moviedata.MovieContract;
 import com.example.popularmovies2.moviedata.MovieContract.MovieEntry;
 import com.example.popularmovies2.moviedata.MovieProvider;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,12 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.popularmovies2.Constants.BASE_IMAGE_URL;
-import static com.example.popularmovies2.Constants.DEFAULT_POSITION;
-import static com.example.popularmovies2.Constants.IMAGE_SIZE;
-import static com.example.popularmovies2.Constants.MOVIE_POSITION;
-
-public class MovieDetailsViewModel extends AndroidViewModel implements
+public class RelatedMovieDetailsViewModel extends AndroidViewModel implements
         RetrofitRequesterTrailer.TrailersOnRetrofitListener, RetrofitRequesterReviews.ReviewsOnRetrofitListener{
 
     Context context;
@@ -63,28 +51,28 @@ public class MovieDetailsViewModel extends AndroidViewModel implements
     public MutableLiveData<List<ReviewPojo>> liveDataReviewPojoList=new MutableLiveData<List<ReviewPojo>>(){};
     List<ReviewPojo> reviewResultList;
 
-//    public MovieDetailsViewModel(@NonNull Application application, @NonNull int position, int movieId) {
-    public MovieDetailsViewModel(@NonNull Application application, @NonNull int position) {
-            super(application);
-            context=application;
-            this.position=position;
+    //    public MovieDetailsViewModel(@NonNull Application application, @NonNull int position, int movieId) {
+    public RelatedMovieDetailsViewModel(@NonNull Application application, @NonNull int position) {
+        super(application);
+        context=application;
+        this.position=position;
 
-            //initialize trailer livedata object
-            TrailerMoviePojo trailerMoviePojo=new TrailerMoviePojo(context.getString(R.string.key_inititialize_mutable_live_data));
-            List<TrailerMoviePojo> trailerMoviePojoList=new ArrayList<>();
-            trailerMoviePojoList.add(trailerMoviePojo);
-            liveDataTrailerMoviePojoList.setValue(trailerMoviePojoList);
+        //initialize trailer livedata object
+        TrailerMoviePojo trailerMoviePojo=new TrailerMoviePojo(context.getString(R.string.key_inititialize_mutable_live_data));
+        List<TrailerMoviePojo> trailerMoviePojoList=new ArrayList<>();
+        trailerMoviePojoList.add(trailerMoviePojo);
+        liveDataTrailerMoviePojoList.setValue(trailerMoviePojoList);
 
-            //initialize review livedata object
+        //initialize review livedata object
         ReviewPojo reviewPojo=new ReviewPojo(context.getString(R.string.author_inititialize_mutable_live_data));
         List<ReviewPojo> reviewPojoList=new ArrayList<>();
         reviewPojoList.add(reviewPojo);
         liveDataReviewPojoList.setValue(reviewPojoList);
 
-            getMovieDir();
-            getTrailers();
-            getReviews();
-        }
+        getMovieDir();
+        getTrailers();
+        getReviews();
+    }
 
 
     private void getMovieDir() {
@@ -148,7 +136,7 @@ public class MovieDetailsViewModel extends AndroidViewModel implements
     private ContentValues createMoveContentValues() {
         ContentValues favoriteMovie = new ContentValues();
 
-        favoriteMovie.put(MovieEntry.COLUMN_ID, movieId);
+        favoriteMovie.put(MovieContract.MovieEntry.COLUMN_ID, movieId);
         favoriteMovie.put(MovieEntry.COLUMN_TITLE, movieTitleString);
         favoriteMovie.put(MovieEntry.COLUMN_POSTER, movieImageString);
         favoriteMovie.put(MovieEntry.COLUMN_PLOT, moviePlotString);

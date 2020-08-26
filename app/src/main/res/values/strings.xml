@@ -41,6 +41,8 @@
     <string name="content">content ...</string>
     <string name="trailers">Trailers:</string>
     <string name="reviews">"Reviews: "</string>
+    <string name="key_inititialize_mutable_live_data">key</string>
+    <string name="author_inititialize_mutable_live_data">author</string>
 
 
 </resources>

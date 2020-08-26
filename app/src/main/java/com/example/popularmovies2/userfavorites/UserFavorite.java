@@ -72,7 +72,7 @@ public class UserFavorite extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_details);
+        setContentView(R.layout.activity_user_movie_details);
 
         Log.i(TAG,"onCreate called");
 
@@ -123,11 +123,6 @@ public class UserFavorite extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().initLoader(LOADER_ID, bundle, this);
     }
-
-
-
-
-
 
     @NonNull
     @Override

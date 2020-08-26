@@ -53,7 +53,20 @@ public class Result implements Serializable {
     private String releaseDate;
 
     //No argument constructor for serializable
-    public Result() {
+    public Result(int id, String title, String image, String date, String plot, Double average) {
+        this.id=id;
+        this.originalTitle=title;
+        this.backdropPath=image;
+        this.releaseDate=date;
+        this.overview=plot;
+        this.voteAverage=average;
+    }
+
+    public Result(String releaseDate){
+        this.releaseDate=releaseDate;
+    }
+
+    public Result(){
     }
 
     public double getPopularity() {

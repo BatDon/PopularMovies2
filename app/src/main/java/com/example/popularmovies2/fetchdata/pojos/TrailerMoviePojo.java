@@ -30,6 +30,11 @@ public class TrailerMoviePojo {
     @Expose
     private String type;
 
+    //constructor to initialize TrailerMoviePojo mutable LiveData list
+    public TrailerMoviePojo(String key){
+        this.key=key;
+    }
+
     public String getId() {
         return id;
     }

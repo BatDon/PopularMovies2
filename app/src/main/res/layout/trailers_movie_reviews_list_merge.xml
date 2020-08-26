@@ -4,10 +4,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/mergeConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
+<!--<merge-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--        xmlns:tools="http://schemas.android.com/tools">-->
     <TextView
         android:id="@+id/trailers_title"
         android:layout_width="wrap_content"
@@ -15,17 +18,16 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/trailers"
-        app:layout_constraintStart_toStartOf="@id/constraintLayout"
-        app:layout_constraintTop_toTopOf="@id/constraintLayout" />
+        app:layout_constraintStart_toStartOf="@id/mergeConstraintLayout"
+        app:layout_constraintTop_toTopOf="@id/mergeConstraintLayout" />
 
     <FrameLayout
         android:id="@+id/trailer_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@id/constraintLayout"
-        app:layout_constraintStart_toStartOf="@id/constraintLayout"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout">
+        app:layout_constraintEnd_toEndOf="@id/mergeConstraintLayout"
+        app:layout_constraintStart_toStartOf="@id/mergeConstraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/trailers_title">
 
         <ProgressBar
             android:id="@+id/trailer_progress_bar"
@@ -37,7 +39,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trailer_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="match_parent" />
     </FrameLayout>
 
 
@@ -56,17 +58,16 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/reviews"
-        app:layout_constraintStart_toStartOf="@id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@id/mergeConstraintLayout"
         app:layout_constraintTop_toBottomOf="@+id/trailer_frame_layout" />
 
     <FrameLayout
         android:id="@+id/review_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
-        app:layout_constraintTop_toBottomOf="@+id/trailer_frame_layout">
+        app:layout_constraintEnd_toEndOf="@+id/mergeConstraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/mergeConstraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/reviews_title">
 
         <ProgressBar
             android:id="@+id/review_progress_bar"
@@ -78,9 +79,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/review_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:visibility="invisible" />
     </FrameLayout>
+<!--</merge>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
