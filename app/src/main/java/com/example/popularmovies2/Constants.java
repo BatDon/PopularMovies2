@@ -30,7 +30,7 @@ public class Constants {
     public static final int GRID_RECYCLER_VIEW=0;
     public static final int LIST_RECYCLER_VIEW=1;
 
-
-
+    //static int for file location number that increases
+    public static String file_location="1";
 
 }

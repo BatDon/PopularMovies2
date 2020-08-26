@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ShareCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -199,6 +203,7 @@ public class UserFavorite extends AppCompatActivity implements LoaderManager.Loa
                 .appendPath(cursor.getString(UserFavorites.INDEX_COLUMN_ID))
                 .build();
     }
+
 
 //    public void showLoading(){
 //        loadingCircle.setVisibility(View.VISIBLE);

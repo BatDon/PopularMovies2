@@ -1,12 +1,17 @@
 package com.example.popularmovies2.relatedmovies;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -43,12 +48,7 @@ import static com.example.popularmovies2.Constants.DEFAULT_POSITION;
 import static com.example.popularmovies2.Constants.IMAGE_SIZE;
 import static com.example.popularmovies2.Constants.MOVIE_POSITION;
 import static com.example.popularmovies2.Constants.RELATED_KEY;
-
-
-
-
-
-
+import static com.example.popularmovies2.Constants.file_location;
 
 
 public class RelatedMoviesDetails extends AppCompatActivity implements TrailerAdapter.OnTrailerMovieListener {
@@ -66,6 +66,8 @@ public class RelatedMoviesDetails extends AppCompatActivity implements TrailerAd
     TextView plotTV;
     ImageButton favoriteB;
     Button relatedB;
+
+    String trailerKey;
 
     Result movie;
 
@@ -249,6 +251,13 @@ public class RelatedMoviesDetails extends AppCompatActivity implements TrailerAd
         trailerList.toArray(resultArray);
         Log.i(TAG, Integer.toString(resultArray.length));
 
+        if(trailerList.size()>0){
+            trailerKey=trailerList.get(0).getKey();
+        }
+        else{
+            trailerKey=null;
+        }
+
 //        Dynamically change Trailer Frame Layout Height
         int reviewLength=0;
         FrameLayout trailerFrameLayout=this.findViewById(R.id.trailer_frame_layout);
@@ -360,7 +369,7 @@ public class RelatedMoviesDetails extends AppCompatActivity implements TrailerAd
     @Override
     public void onMovieClick(int position) {
         TrailerMoviePojo trailerMoviePojo = trailerList.get(position);
-        String trailerKey = trailerMoviePojo.getKey();
+        trailerKey = trailerMoviePojo.getKey();
         Log.i(TAG, "trailerkey= " + trailerKey);
         startSearchIntent(trailerKey);
     }
@@ -395,6 +404,65 @@ public class RelatedMoviesDetails extends AppCompatActivity implements TrailerAd
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, browserIntents.toArray(new Parcelable[]{}));
         startActivity(chooserIntent);
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.share_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_share) {
+            createShareMovieIntent();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public void createShareMovieIntent() {
+        if(trailerKey==null){
+            Toast.makeText(context, "No trailers to share for this movie", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent shareYoutubeIntent = new Intent(Intent.ACTION_SEND);
+        shareYoutubeIntent.setType("text/plain");
+        shareYoutubeIntent.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+        shareYoutubeIntent.putExtra(Intent.EXTRA_TEXT, buildYouTubeUri());
+        startActivity(Intent.createChooser(shareYoutubeIntent, "Share YouTube URL"));
+    }
+
+    public String buildYouTubeUri(){
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("www.youtube.com")
+                .appendPath("watch")
+                .appendQueryParameter("v", trailerKey);
+        String uriString=builder.toString();
+        return uriString;
+    }
+
+    @Override
+    public void onBackPressed() {
+        int file_location_int=Integer.parseInt(file_location);
+        file_location_int--;
+        file_location=Integer.toString(file_location_int);
+        Log.i(TAG,"back presssed file_location= "+file_location);
+        finish();
+    }
+
+
+
+
 }
 
 

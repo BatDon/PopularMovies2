@@ -3,6 +3,9 @@
     <string name="image_preview">Image is shown here</string>
     <string name="pathToFile">/data/user/0/com.example.popularmovies/files/popularMoviesList.txt</string>
     <string name="pathToRelatedMoviesFile">/data/user/0/com.example.popularmovies/files/relatedMoviesList.txt</string>
+    <string name="pathWithoutFileName">/data/user/0/com.example.popularmovies/files/</string>
+    <string name="pathToMoviesFileBeforeInStack">/data/user/0/com.example.popularmovies/files/beforeMoviesList.txt</string>
+    <string name="pathToMoviesFileAfterInStack">/data/user/0/com.example.popularmovies/files/afterMoviesList.txt</string>
     <string name="detail_error_message">Error Getting Movie Position</string>
     <string name="popularity">Popularity</string>
     <string name="movie_image">Movie Image</string>
@@ -43,6 +46,7 @@
     <string name="reviews">"Reviews: "</string>
     <string name="key_inititialize_mutable_live_data">key</string>
     <string name="author_inititialize_mutable_live_data">author</string>
+    <string name="share">Share</string>
 
 
 </resources>

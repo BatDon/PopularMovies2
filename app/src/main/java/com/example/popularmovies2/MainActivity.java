@@ -163,9 +163,11 @@ public class MainActivity extends AppCompatActivity implements GridAdapter.OnMov
         progressBar.setVisibility(View.INVISIBLE);
         gridRecyclerView.setVisibility(View.VISIBLE);
 
-        ArrayList<Result> movieArrayList = new ArrayList<Result>(Arrays.asList(resultArray));
+        if(resultArray.length>0) {
+            ArrayList<Result> movieArrayList = new ArrayList<Result>(Arrays.asList(resultArray));
 
-        mainActivityViewModel.writeToFile(movieArrayList,this);
+            mainActivityViewModel.writeToFile(movieArrayList, this);
+        }
 
         Log.i(TAG,"end of setUpAdapter");
     }

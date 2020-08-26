@@ -20,6 +20,9 @@ import android.os.Parcelable;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -77,6 +80,8 @@ public class MovieDetails extends AppCompatActivity implements TrailerAdapter.On
     Button relatedB;
 
     Result movie;
+
+    String trailerKey;
 
 
     int movieId;
@@ -257,6 +262,14 @@ public class MovieDetails extends AppCompatActivity implements TrailerAdapter.On
         trailerList.toArray(resultArray);
         Log.i(TAG, Integer.toString(resultArray.length));
 
+        if(trailerList.size()>0){
+            trailerKey=trailerList.get(0).getKey();
+        }
+        else{
+            trailerKey=null;
+        }
+
+
 //        Dynamically change Trailer Frame Layout Height
         int reviewLength=0;
         FrameLayout trailerFrameLayout=this.findViewById(R.id.trailer_frame_layout);
@@ -274,6 +287,8 @@ public class MovieDetails extends AppCompatActivity implements TrailerAdapter.On
         trailerRecyclerView.setAdapter(trailerAdapter);
 
         showTrailerRecyclerView();
+
+
 
 //        if(resultArray.length>0 && !key.equals("key")) {
 //            ReviewAdapter reviewAdapter = new ReviewAdapter(this, resultArray);
@@ -368,7 +383,7 @@ public class MovieDetails extends AppCompatActivity implements TrailerAdapter.On
     @Override
     public void onMovieClick(int position) {
         TrailerMoviePojo trailerMoviePojo = trailerList.get(position);
-        String trailerKey = trailerMoviePojo.getKey();
+        trailerKey = trailerMoviePojo.getKey();
         Log.i(TAG, "trailerkey= " + trailerKey);
         startSearchIntent(trailerKey);
     }
@@ -402,6 +417,52 @@ public class MovieDetails extends AppCompatActivity implements TrailerAdapter.On
         Intent chooserIntent = Intent.createChooser(youtubeIntent, query);
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, browserIntents.toArray(new Parcelable[]{}));
         startActivity(chooserIntent);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.share_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_share) {
+            createShareMovieIntent();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public void createShareMovieIntent() {
+        if(trailerKey==null){
+            Toast.makeText(context, "No trailers to share for this movie", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent shareYoutubeIntent = new Intent(Intent.ACTION_SEND);
+        shareYoutubeIntent.setType("text/plain");
+        shareYoutubeIntent.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+        shareYoutubeIntent.putExtra(Intent.EXTRA_TEXT, buildYouTubeUri());
+        startActivity(Intent.createChooser(shareYoutubeIntent, "Share YouTube URL"));
+    }
+
+    public String buildYouTubeUri(){
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("www.youtube.com")
+                .appendPath("watch")
+                .appendQueryParameter("v", trailerKey);
+        String uriString=builder.toString();
+        return uriString;
     }
 }
 

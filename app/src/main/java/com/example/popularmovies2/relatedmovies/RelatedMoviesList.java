@@ -1,6 +1,7 @@
 package com.example.popularmovies2.relatedmovies;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +46,7 @@ public class RelatedMoviesList extends AppCompatActivity implements RelatedMovie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.related_movie_list);
+        Log.i(TAG,"onCreate called");
         setUpViews();
         movieId=checkForIntent();
 
@@ -88,9 +90,13 @@ public class RelatedMoviesList extends AppCompatActivity implements RelatedMovie
                     Log.i(TAG, "List<Result> movies size= "+i);
                     // Update the cached copy of the words in the adapter.
                     Log.i("RelatedMoviesList","onChanged triggered");
-                    if(i>0){
+                    if(i>1){
                         resultList=movies;
                         setUpAdapter();
+                    }
+                    else if(i==0){
+                        Toast.makeText(RelatedMoviesList.this, "No related movies found", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 //                i++;
 //                //mainViewModel.requestMovies();
@@ -125,17 +131,19 @@ public class RelatedMoviesList extends AppCompatActivity implements RelatedMovie
 //        recyclerView.setAdapter(movieAdapter);
             relatedRecyclerView.setAdapter(relatedMoviesAdapter);
 
-            if(resultArray.length>0) {
+            if(resultArray.length>1) {
                 Log.i(TAG,"setUpAdapter showRecyclerView");
                 showRecyclerView();
+                ArrayList<Result> movieArrayList = new ArrayList<Result>(Arrays.asList(resultArray));
+                relatedListViewModel.writeToFile(movieArrayList);
             }
             else{
                 Toast.makeText(this, "No related movies found", Toast.LENGTH_SHORT).show();
             }
 
-            ArrayList<Result> movieArrayList = new ArrayList<Result>(Arrays.asList(resultArray));
+
 //
-            relatedListViewModel.writeToFile(movieArrayList);
+
 
             Log.i(TAG,"end of setUpAdapter");
         }

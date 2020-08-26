@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -18,15 +19,19 @@ import com.example.popularmovies2.fetchdata.pojos.TrailerMoviePojo;
 import com.example.popularmovies2.moviedata.MovieContract;
 import com.example.popularmovies2.moviedata.MovieContract.MovieEntry;
 import com.example.popularmovies2.moviedata.MovieProvider;
+import com.example.popularmovies2.relatedmovies.RelatedMoviesDetails;
 
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.example.popularmovies2.Constants.file_location;
 
 public class RelatedMovieDetailsViewModel extends AndroidViewModel implements
         RetrofitRequesterTrailer.TrailersOnRetrofitListener, RetrofitRequesterReviews.ReviewsOnRetrofitListener{
@@ -50,6 +55,8 @@ public class RelatedMovieDetailsViewModel extends AndroidViewModel implements
 
     public MutableLiveData<List<ReviewPojo>> liveDataReviewPojoList=new MutableLiveData<List<ReviewPojo>>(){};
     List<ReviewPojo> reviewResultList;
+
+    public static final String TAG=RelatedMovieDetailsViewModel.class.getSimpleName();
 
     //    public MovieDetailsViewModel(@NonNull Application application, @NonNull int position, int movieId) {
     public RelatedMovieDetailsViewModel(@NonNull Application application, @NonNull int position) {
@@ -79,7 +86,12 @@ public class RelatedMovieDetailsViewModel extends AndroidViewModel implements
         ArrayList<Result> movieList;
 
         try {
-            FileInputStream fis = new FileInputStream(new File(context.getString(R.string.pathToFile)));
+
+//            int fileNumber=Integer.parseInt(file_location);
+//            file_location=Integer.toString(fileNumber);
+//            FileInputStream fis = new FileInputStream(new File(context.getString(R.string.pathToRelatedMoviesFile)));
+            Log .i(TAG,"file_location= "+file_location);
+            FileInputStream fis = new FileInputStream(new File(context.getString(R.string.pathWithoutFileName)+file_location+".txt"));
             ObjectInputStream ois = new ObjectInputStream(fis);
             movieList = (ArrayList) ois.readObject();
 

@@ -2,11 +2,13 @@ package com.example.popularmovies2.viewmodels;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.popularmovies2.Constants;
 import com.example.popularmovies2.R;
 import com.example.popularmovies2.RetrofitRequesters.RetrofitRequester;
 import com.example.popularmovies2.RetrofitRequesters.RetrofitRequesterRelated;
@@ -19,10 +21,14 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.popularmovies2.Constants.file_location;
+
+
 public class RelatedListViewModel extends AndroidViewModel implements RetrofitRequesterRelated.RelatedOnRetrofitListener{
 
     Context context;
     int movieId;
+    public static final String TAG=RelatedListViewModel.class.getSimpleName();
 
     List<Result> relatedMovieList;
     public MutableLiveData<List<Result>> liveDataResultList=new MutableLiveData<List<Result>>(){};
@@ -45,10 +51,16 @@ public class RelatedListViewModel extends AndroidViewModel implements RetrofitRe
         return this.liveDataResultList;
     }
 
-    public void writeToFile(ArrayList< Result > relatedMovieList) {
+    public void writeToFile(ArrayList<Result> relatedMovieList) {
 
         try {
-            FileOutputStream fileOut = new FileOutputStream(new File(context.getString(R.string.pathToFile)));
+//            FileOutputStream fileOut = new FileOutputStream(new File(context.getString(R.string.pathToRelatedMoviesFile)));
+//            FileOutputStream fileOut = new FileOutputStream(new File(context.getString(R.string.pathToMoviesFileBeforeInStack)));
+            int fileNumber=Integer.parseInt(file_location);
+            fileNumber++;
+            file_location=Integer.toString(fileNumber);
+            Log.i(TAG,"file_location= "+file_location);
+            FileOutputStream fileOut = new FileOutputStream(new File(context.getString(R.string.pathWithoutFileName)+file_location+".txt"));
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(relatedMovieList);
             objectOut.close();
