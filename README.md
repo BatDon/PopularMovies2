@@ -15,8 +15,6 @@ in the String api_key variable it has a value of YOUR_API_KEY_GOES_HERE. Change 
 - Lifecycle
 - RecyclerView
 
-implementation 'com.squareup.picasso:picasso:2.71828'
-
 ![](app/src/main/java/com/example/popularmovies2/ImagesForGithub/rsz_screenshot_from_2020-10-20_17-06-09.png) |
 ![](app/src/main/java/com/example/popularmovies2/ImagesForGithub/rsz_screenshot_from_2020-10-20_17-05-00.png) |
 ![](app/src/main/java/com/example/popularmovies2/ImagesForGithub/rsz_screenshot_from_2020-10-20_17-05-11.png) 
