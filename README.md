@@ -17,17 +17,6 @@ in the String api_key variable it has a value of YOUR_API_KEY_GOES_HERE. Change 
 
 implementation 'com.squareup.picasso:picasso:2.71828'
 
-    //retrofit dependencies
-    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-
-    //HTTP Logging Interceptor
-    implementation "com.squareup.okhttp3:logging-interceptor:3.9.0"
-
-    // Lifecycle components
-    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
-
 ![](app/src/main/java/com/example/popularmovies2/ImagesForGithub/rsz_screenshot_from_2020-10-20_17-06-09.png) |
 ![](app/src/main/java/com/example/popularmovies2/ImagesForGithub/rsz_screenshot_from_2020-10-20_17-05-00.png) |
 ![](app/src/main/java/com/example/popularmovies2/ImagesForGithub/rsz_screenshot_from_2020-10-20_17-05-11.png) 
